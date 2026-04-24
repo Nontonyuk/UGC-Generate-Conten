@@ -1,4 +1,7 @@
 module.exports = async function handler(req, res) {
+  // =========================================
+  // CORS
+  // =========================================
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -15,6 +18,9 @@ module.exports = async function handler(req, res) {
   }
 
   try {
+    // =========================================
+    // ENV CHECK
+    // =========================================
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
@@ -24,6 +30,9 @@ module.exports = async function handler(req, res) {
       });
     }
 
+    // =========================================
+    // REQUEST BODY
+    // =========================================
     const {
       productName,
       productType,
@@ -34,65 +43,207 @@ module.exports = async function handler(req, res) {
       sceneCount,
       hookType,
       ctaType,
+
       characterName,
       characterDetail,
       productDetail
     } = req.body || {};
 
-    if (!productName || !productFunction || !targetMarket || !customerProblem) {
+    // =========================================
+    // VALIDATION
+    // =========================================
+    if (
+      !productName ||
+      !productFunction ||
+      !targetMarket ||
+      !customerProblem
+    ) {
       return res.status(400).json({
         success: false,
-        error: "productName, productFunction, targetMarket, customerProblem wajib diisi"
+        error:
+          "productName, productFunction, targetMarket, customerProblem wajib diisi"
       });
     }
 
+    // =========================================
+    // MASTER PROMPT — V4 CORE ENGINE
+    // =========================================
     const masterPrompt = `
-Kamu adalah UGC Prompt Engine V3 PRO MAX.
+Kamu adalah:
+
+UGC Prompt Engine V4 CORE
 
 Tugasmu:
-Buat output JSON ONLY tanpa penjelasan tambahan.
+Buat output JSON ONLY.
+Tanpa penjelasan tambahan.
+Tanpa markdown.
+Tanpa code block.
 
-Output harus sangat advanced, realistis, natural, human-like, Gen Z style, dan profesional.
+==================================================
+V4 CORE ENGINE RULES
+==================================================
 
-PRINSIP WAJIB:
-- hasil gambar harus realistis seperti foto manusia asli
-- tekstur kulit natural
-- pencahayaan realistis seperti kamera HP
-- bukan cinematic berlebihan
-- bukan AI look
-- natural candid
-- ekspresi manusia nyata
-- wajah konsisten
-- karakter identity lock kuat
-- usia Gen Z
-- tone voice Gen Z alami
-- voice over natural seperti creator asli
-- video movement smooth
-- transisi natural
-- camera movement realistic
-- tidak patah-patah
-- tidak teleport movement
-- tidak fake AI movement
+Tujuan utama:
+menghasilkan prompt UGC realistis untuk TikTok Affiliate
+dengan hasil:
+- manusia realistis
+- non AI look
+- karakter konsisten
+- produk konsisten
+- video natural
+- voice over natural
+- creator feel authentic
+- Gen Z relatable
 
-DATA PRODUK:
-Nama Produk: ${productName}
-Jenis Produk: ${productType || "-"}
-Fungsi Produk: ${productFunction}
-Target Market: ${targetMarket}
-Problem Customer: ${customerProblem}
-Gaya Konten: ${contentStyle || "-"}
-Jumlah Scene: ${sceneCount || "5"}
-Tipe Hook: ${hookType || "-"}
-Tipe CTA: ${ctaType || "-"}
+==================================================
+ENGINE 1 — IDENTITY LOCK
+==================================================
 
-IDENTITY LOCK:
-Nama Karakter: ${characterName || "Alya"}
-Detail Karakter: ${characterDetail || "Wanita Indonesia 24-28 tahun, wajah natural, Gen Z, relatable, casual stylish"}
+WAJIB mengunci:
 
-DETAIL PRODUK:
-${productDetail || "produk premium, clean, aesthetic"}
+- wajah karakter
+- usia karakter
+- facial asymmetry
+- skin texture
+- body type
+- hair style
+- outfit consistency
+- natural makeup
+- Indonesian creator look
+- product shape consistency
+- product logo visibility
+- product detail consistency
+- lighting consistency
+- creator vibe consistency
 
-FORMAT JSON WAJIB:
+==================================================
+ENGINE 2 — NANO BANANA CORE
+==================================================
+
+Untuk IMAGE PROMPT wajib:
+
+- ultra realistic human
+- realistic skin pores
+- natural skin texture
+- realistic hands
+- realistic shadows
+- realistic fabric folds
+- realistic shoe texture
+- smartphone camera realism
+- handheld creator feel
+- natural daylight
+- warm realistic indoor light
+- casual social media look
+- candid creator vibe
+- authentic Indonesian Gen Z creator
+- non cinematic
+- non studio shoot
+- non fashion editorial
+- no glossy AI skin
+- no doll face
+- no uncanny valley
+
+Prompt harus spesifik untuk Nano Banana Pro.
+
+==================================================
+ENGINE 3 — GOOGLE FLOW CORE
+==================================================
+
+Untuk VIDEO PROMPT wajib:
+
+- smooth movement
+- realistic walking physics
+- realistic body balance
+- realistic hand gestures
+- realistic eye movement
+- subtle facial movement
+- smooth camera movement
+- no sudden movement
+- no teleport motion
+- no weird AI movement
+- handheld creator video realism
+- natural creator motion
+- social media authentic feel
+
+Wajib format timeline 8 detik:
+
+0s–2s
+2s–4s
+4s–6s
+6s–8s
+
+==================================================
+ENGINE 4 — VOICE ENGINE CORE
+==================================================
+
+Untuk VOICE wajib:
+
+- Gen Z female voice
+- natural Indonesian creator tone
+- warm
+- relatable
+- soft spoken
+- casual conversational
+- natural breathing
+- subtle emotional nuance
+- authentic creator speaking style
+- non robotic
+- non hard selling
+- like talking to close friend
+
+==================================================
+INPUT DATA
+==================================================
+
+Nama Produk:
+${productName}
+
+Jenis Produk:
+${productType || "-"}
+
+Fungsi Produk:
+${productFunction}
+
+Target Market:
+${targetMarket}
+
+Problem Customer:
+${customerProblem}
+
+Gaya Konten:
+${contentStyle || "Soft Selling"}
+
+Jumlah Scene:
+${sceneCount || 4}
+
+Tipe Hook:
+${hookType || "Curiosity Hook"}
+
+Tipe CTA:
+${ctaType || "Soft CTA"}
+
+==================================================
+IDENTITY LOCK DATA
+==================================================
+
+Nama Karakter:
+${characterName || "Alya"}
+
+Detail Karakter:
+${
+  characterDetail ||
+  "Wanita Indonesia usia 24-28 tahun, Gen Z creator, natural face, realistic skin texture, relatable, casual stylish outfit"
+}
+
+Detail Produk:
+${
+  productDetail ||
+  "Produk premium, clean aesthetic, realistic usage, visible logo, consistent appearance"
+}
+
+==================================================
+OUTPUT FORMAT JSON WAJIB
+==================================================
 
 {
   "content_ideas": [
@@ -103,50 +254,85 @@ FORMAT JSON WAJIB:
       "viral_reason": ""
     }
   ],
+
   "ugc_script": {
     "hook_2_seconds": "",
     "full_script": "",
     "cta_closing": "",
     "supporting_caption": ""
   },
-  "scene_breakdown": [
-    {
-      "scene_number": 1,
-      "main_visual": "",
-      "camera_angle": "",
-      "facial_expression": "",
-      "hand_gesture": "",
-      "background": "",
-      "supporting_props": "",
-      "lighting": "",
-      "visual_mood": "",
-      "transition": "",
-      "image_prompt": "",
-      "video_prompt": ""
-    }
-  ],
+
   "identity_lock": {
     "character_lock": "",
     "product_lock": "",
     "lighting_lock": "",
-    "style_lock": "",
-    "voice_lock": ""
-  }
+    "style_lock": ""
+  },
+
+  "scene_breakdown": [
+    {
+      "scene_number": 1,
+
+      "main_visual": "",
+
+      "camera_angle": "",
+
+      "facial_expression": "",
+
+      "hand_gesture": "",
+
+      "background": "",
+
+      "lighting": "",
+
+      "visual_mood": "",
+
+      "nano_banana_image_prompt": "",
+
+      "google_flow_video_prompt": "",
+
+      "voice_over": "",
+
+      "tone_of_voice": "",
+
+      "speaking_style": "",
+
+      "timeline_8s": {
+        "0s_2s": "",
+        "2s_4s": "",
+        "4s_6s": "",
+        "6s_8s": ""
+      }
+    }
+  ]
 }
 
+==================================================
+FINAL RULES
+==================================================
+
 WAJIB:
-- setiap scene harus punya image_prompt
-- setiap scene harus punya video_prompt
-- prompt harus sangat detail
-- prompt harus realistis
-- prompt harus konsisten karakter
 - JSON ONLY
+- jangan beri penjelasan
+- jangan markdown
+- jangan code block
+- setiap scene wajib lengkap
+- prompt harus detail
+- prompt harus spesifik
+- prompt harus realistis
+- prompt harus production-ready
 `;
 
+    // =========================================
+    // GEMINI ENDPOINT
+    // =========================================
     const endpoint =
-  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
-  GEMINI_API_KEY;
+      "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+      GEMINI_API_KEY;
 
+    // =========================================
+    // GEMINI REQUEST
+    // =========================================
     const geminiResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -173,6 +359,9 @@ WAJIB:
 
     const data = await geminiResponse.json();
 
+    // =========================================
+    // GEMINI RESPONSE CHECK
+    // =========================================
     if (!geminiResponse.ok) {
       return res.status(500).json({
         success: false,
@@ -181,10 +370,22 @@ WAJIB:
       });
     }
 
-    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-    const cleanedText = rawText.replace(/```json/g, "").replace(/```/g, "").trim();
+    // =========================================
+    // EXTRACT RAW TEXT
+    // =========================================
+    const rawText =
+      data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
+    const cleanedText = rawText
+      .replace(/```json/g, "")
+      .replace(/```/g, "")
+      .trim();
+
+    // =========================================
+    // SAFE JSON PARSER
+    // =========================================
     let parsed;
+
     try {
       parsed = JSON.parse(cleanedText);
     } catch (jsonError) {
@@ -195,12 +396,17 @@ WAJIB:
       });
     }
 
+    // =========================================
+    // SUCCESS RESPONSE
+    // =========================================
     return res.status(200).json({
       success: true,
       data: parsed
     });
+
   } catch (error) {
     console.error("FULL ERROR:", error);
+
     return res.status(500).json({
       success: false,
       error: "Internal server error",
