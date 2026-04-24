@@ -79,16 +79,39 @@ DATA USER:
 - Bahasa Konten: ${contentLanguage || 'Indonesia'}
 
 WAJIB:
-1. Konten realistis seperti creator asli
-2. Tidak terasa AI generated
-3. Tidak terlalu salesy
-4. Conversion tinggi
-5. Hook kuat di 2 detik pertama
-6. CTA natural
-7. Konsistensi karakter & produk
-8. Prompt gambar sangat detail
-9. Prompt video natural movement
-10. Output HARUS JSON valid
+Setiap scene HARUS memiliki:
+
+1. image_prompt terpisah
+2. video_prompt terpisah
+
+JANGAN buat 1 prompt global.
+
+HARUS per scene.
+
+Image prompt:
+- realistic human
+- smartphone photo
+- no AI look
+- no split image
+- no collage
+
+Video prompt:
+- smooth movement
+- natural walking
+- no robotic motion
+- realistic lighting
+- subtle handheld
+
+3. Konten realistis seperti creator asli
+4. Tidak terasa AI generated
+5. Tidak terlalu salesy
+6. Conversion tinggi
+7. Hook kuat di 2 detik pertama
+8. CTA natural
+9. Konsistensi karakter & produk
+10. Prompt gambar sangat detail
+11. Prompt video natural movement
+12. Output HARUS JSON valid
 
 RETURN JSON FORMAT ONLY:
 
@@ -101,12 +124,15 @@ RETURN JSON FORMAT ONLY:
       "viral_reason": ""
     }
   ],
+
   "ugc_script": {
     "hook_2_seconds": "",
     "full_script": "",
     "cta_closing": "",
-    "supporting_caption": ""
+    "supporting_caption": "",
+    "voice_style": ""
   },
+
   "scene_breakdown": [
     {
       "scene_number": 1,
@@ -121,8 +147,24 @@ RETURN JSON FORMAT ONLY:
       "transition": ""
     }
   ],
-  "nano_banana_prompt": "",
-  "google_flow_prompt": ""
+
+  "scene_prompts": [
+    {
+      "scene_number": 1,
+
+      "image_prompt": "",
+
+      "video_prompt": ""
+    }
+  ],
+
+  "identity_lock": {
+    "character_lock": "",
+    "product_lock": "",
+    "lighting_lock": "",
+    "style_lock": "",
+    "voice_lock": ""
+  }
 }
 
 Jangan tambahkan penjelasan lain.
