@@ -194,12 +194,14 @@ JSON only.
 
     const data = await geminiResponse.json();
 
-    if (!geminiResponse.ok) {
-      return res.status(500).json({
-        error: 'Gemini API request failed',
-        details: data
-      });
-    }
+if (!geminiResponse.ok) {
+  console.error("GEMINI ERROR RESPONSE:", JSON.stringify(data, null, 2));
+
+  return res.status(500).json({
+    error: "Gemini API request failed",
+    details: data
+  });
+}
 
     const rawText =
       data?.candidates?.[0]?.content?.parts?.[0]?.text || '';
@@ -226,11 +228,13 @@ JSON only.
       data: parsed
     });
   } catch (error) {
-    console.error(error);
+  console.error("FULL ERROR:", error);
+  console.error("ERROR MESSAGE:", error.message);
+  console.error("ERROR STACK:", error.stack);
 
-    return res.status(500).json({
-      error: 'Internal server error',
-      message: error.message
-    });
+  return res.status(500).json({
+    error: "Internal server error",
+    message: error.message,
+    stack: error.stack
+  });
   }
-}
