@@ -458,8 +458,10 @@ JSON only.
 `;
 
     // ===== GEMINI API CALL =====
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
-    const geminiResponse = await fetch(endpoint, {
+const endpoint =
+  "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
+  GEMINI_API_KEY;
+  const geminiResponse = await fetch(endpoint, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
