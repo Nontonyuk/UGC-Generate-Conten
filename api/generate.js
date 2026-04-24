@@ -13,11 +13,6 @@ export default async function handler(req, res) {
     return res.status(200).end();
   }
 
-  if (req.method !== "POST") {
-    return res.status(405).json({
-      error: "Method not allowed"
-    });
-  }
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
@@ -172,8 +167,7 @@ JSON only.
 `;
 
     // ===== GEMINI API CALL =====
-    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${apiKey}`;
-
+    const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-pro:generateContent?key=${apiKey}`;
     const geminiResponse = await fetch(endpoint, {
       method: 'POST',
       headers: {
@@ -193,7 +187,7 @@ JSON only.
           temperature: 0.8,
           topP: 0.95,
           topK: 40,
-          maxOutputTokens: 8192
+          maxOutputTokens: 4096
         }
       })
     });
