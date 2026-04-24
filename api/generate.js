@@ -1,7 +1,7 @@
 module.exports = async function handler(req, res) {
-  // =========================================
-  // CORS
-  // =========================================
+  // =====================================================
+  // CORS CONFIG
+  // =====================================================
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
@@ -13,14 +13,14 @@ module.exports = async function handler(req, res) {
   if (req.method !== "POST") {
     return res.status(405).json({
       success: false,
-      error: "Method not allowed. Use POST request only."
+      error: "Method not allowed. Use POST only."
     });
   }
 
   try {
-    // =========================================
+    // =====================================================
     // ENV CHECK
-    // =========================================
+    // =====================================================
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
     if (!GEMINI_API_KEY) {
@@ -30,9 +30,9 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // =========================================
-    // REQUEST BODY
-    // =========================================
+    // =====================================================
+    // INPUT BODY
+    // =====================================================
     const {
       productName,
       productType,
@@ -44,14 +44,18 @@ module.exports = async function handler(req, res) {
       hookType,
       ctaType,
 
+      characterType, // female / male
       characterName,
       characterDetail,
-      productDetail
+      productDetail,
+
+      platform, // TikTok / Instagram
+      contentObjective // Awareness / Consideration / Conversion / Auto
     } = req.body || {};
 
-    // =========================================
+    // =====================================================
     // VALIDATION
-    // =========================================
+    // =====================================================
     if (
       !productName ||
       !productFunction ||
@@ -65,107 +69,186 @@ module.exports = async function handler(req, res) {
       });
     }
 
-    // =========================================
-    // MASTER PROMPT — V4 CORE ENGINE
-    // =========================================
+    // =====================================================
+    // DEFAULT CHARACTER CORE
+    // =====================================================
+    const femaleCore = `
+Indonesian Gen Z Female Creator
+Age 23–28
+Soft spoken
+Natural beauty
+Visible skin texture
+Realistic face details
+Friendly and relatable
+Warm personality
+Trustworthy affiliate creator
+Casual premium lifestyle look
+Authentic UGC creator vibe
+`;
+
+    const maleCore = `
+Indonesian Gen Z Male Creator
+Age 24–30
+Clean casual style
+Natural masculine vibe
+Confident but relatable
+Friendly creator energy
+Authentic lifestyle creator
+Trustworthy recommendation style
+Premium casual appearance
+Natural human realism
+`;
+
+    const selectedCharacterCore =
+      characterType === "male" ? maleCore : femaleCore;
+
+    // =====================================================
+    // MASTER PROMPT V5
+    // =====================================================
     const masterPrompt = `
 Kamu adalah:
 
-UGC Prompt Engine V4 CORE
+UGC Prompt Engine V5
+AI Influencer Marketing Operating System
 
-Tugasmu:
-Buat output JSON ONLY.
-Tanpa penjelasan tambahan.
-Tanpa markdown.
-Tanpa code block.
+Tugas utama:
+bukan hanya membuat prompt
 
-==================================================
-V4 CORE ENGINE RULES
-==================================================
+tetapi:
 
-Tujuan utama:
-menghasilkan prompt UGC realistis untuk TikTok Affiliate
-dengan hasil:
-- manusia realistis
-- non AI look
-- karakter konsisten
-- produk konsisten
-- video natural
-- voice over natural
-- creator feel authentic
-- Gen Z relatable
+membuat konten yang:
+- realistis
+- menghasilkan trust
+- membangun personal branding
+- meningkatkan conversion
+- cocok untuk TikTok & Instagram
+- affiliate selling tanpa hard selling
 
-==================================================
-ENGINE 1 — IDENTITY LOCK
-==================================================
+WAJIB OUTPUT:
+JSON ONLY
 
-WAJIB mengunci:
-
-- wajah karakter
-- usia karakter
-- facial asymmetry
-- skin texture
-- body type
-- hair style
-- outfit consistency
-- natural makeup
-- Indonesian creator look
-- product shape consistency
-- product logo visibility
-- product detail consistency
-- lighting consistency
-- creator vibe consistency
+TANPA:
+- markdown
+- penjelasan
+- code block
+- kalimat tambahan
 
 ==================================================
-ENGINE 2 — NANO BANANA CORE
+SYSTEM CORE
 ==================================================
 
-Untuk IMAGE PROMPT wajib:
+Kamu berpikir seperti:
+
+Senior Digital Marketing Strategist
++
+UGC Conversion Expert
++
+TikTok Affiliate Strategist
++
+Instagram Personal Branding Expert
++
+Influencer Positioning Specialist
+
+==================================================
+ENGINE 1 — FUNNEL ENGINE
+==================================================
+
+Pahami 3 funnel utama:
+
+1. Awareness
+→ audience belum sadar masalah
+
+2. Consideration
+→ audience mulai tertarik
+
+3. Conversion
+→ audience siap membeli
+
+Jika contentObjective = Auto
+maka tentukan funnel terbaik sendiri.
+
+Setiap output wajib menyesuaikan funnel.
+
+==================================================
+ENGINE 2 — BUYER PSYCHOLOGY ENGINE
+==================================================
+
+Pahami:
+
+- pain point
+- emotional trigger
+- insecurity trigger
+- desire trigger
+- trust trigger
+- urgency trigger
+- FOMO trigger
+- buying behavior
+
+Konten harus menjual secara psikologis.
+
+==================================================
+ENGINE 3 — PERSONAL BRANDING ENGINE
+==================================================
+
+Karakter influencer HARUS konsisten.
+
+Gunakan hanya karakter ini:
+
+${selectedCharacterCore}
+
+Nama karakter:
+${characterName || "Alya"}
+
+Tambahan detail:
+${characterDetail || "-"}
+
+Karakter tidak boleh berubah.
+Wajah tidak boleh berubah.
+Persona harus konsisten.
+
+==================================================
+ENGINE 4 — NANO BANANA ENGINE
+==================================================
+
+IMAGE PROMPT wajib:
 
 - ultra realistic human
 - realistic skin pores
-- natural skin texture
+- realistic face texture
 - realistic hands
-- realistic shadows
 - realistic fabric folds
-- realistic shoe texture
 - smartphone camera realism
 - handheld creator feel
 - natural daylight
 - warm realistic indoor light
-- casual social media look
-- candid creator vibe
-- authentic Indonesian Gen Z creator
+- casual creator vibe
 - non cinematic
-- non studio shoot
-- non fashion editorial
-- no glossy AI skin
-- no doll face
-- no uncanny valley
+- non AI glossy skin
+- non doll face
+- non uncanny valley
+- authentic Indonesian creator realism
 
 Prompt harus spesifik untuk Nano Banana Pro.
 
 ==================================================
-ENGINE 3 — GOOGLE FLOW CORE
+ENGINE 5 — GOOGLE FLOW ENGINE
 ==================================================
 
-Untuk VIDEO PROMPT wajib:
+VIDEO PROMPT wajib:
 
 - smooth movement
 - realistic walking physics
-- realistic body balance
-- realistic hand gestures
+- natural body balance
+- natural hand gestures
 - realistic eye movement
 - subtle facial movement
 - smooth camera movement
-- no sudden movement
+- no sudden motion
 - no teleport motion
-- no weird AI movement
-- handheld creator video realism
-- natural creator motion
-- social media authentic feel
+- authentic creator motion
+- realistic creator speaking motion
 
-Wajib format timeline 8 detik:
+WAJIB format timeline 8 detik:
 
 0s–2s
 2s–4s
@@ -173,23 +256,35 @@ Wajib format timeline 8 detik:
 6s–8s
 
 ==================================================
-ENGINE 4 — VOICE ENGINE CORE
+ENGINE 6 — VOICE ENGINE
 ==================================================
 
-Untuk VOICE wajib:
+VOICE wajib:
 
-- Gen Z female voice
-- natural Indonesian creator tone
-- warm
-- relatable
+- Gen Z natural voice
+- relatable creator tone
 - soft spoken
-- casual conversational
+- warm
+- trustworthy
 - natural breathing
 - subtle emotional nuance
-- authentic creator speaking style
+- casual conversational
+- like talking to close friend
 - non robotic
 - non hard selling
-- like talking to close friend
+
+==================================================
+ENGINE 7 — PLATFORM ENGINE
+==================================================
+
+Platform:
+${platform || "TikTok"}
+
+Jika TikTok:
+→ fokus retention + conversion
+
+Jika Instagram:
+→ fokus authority + personal branding
 
 ==================================================
 INPUT DATA
@@ -204,48 +299,62 @@ ${productType || "-"}
 Fungsi Produk:
 ${productFunction}
 
+Detail Produk:
+${productDetail || "-"}
+
 Target Market:
 ${targetMarket}
 
 Problem Customer:
 ${customerProblem}
 
-Gaya Konten:
+Content Style:
 ${contentStyle || "Soft Selling"}
 
 Jumlah Scene:
 ${sceneCount || 4}
 
-Tipe Hook:
+Hook Type:
 ${hookType || "Curiosity Hook"}
 
-Tipe CTA:
+CTA Type:
 ${ctaType || "Soft CTA"}
 
-==================================================
-IDENTITY LOCK DATA
-==================================================
-
-Nama Karakter:
-${characterName || "Alya"}
-
-Detail Karakter:
-${
-  characterDetail ||
-  "Wanita Indonesia usia 24-28 tahun, Gen Z creator, natural face, realistic skin texture, relatable, casual stylish outfit"
-}
-
-Detail Produk:
-${
-  productDetail ||
-  "Produk premium, clean aesthetic, realistic usage, visible logo, consistent appearance"
-}
+Content Objective:
+${contentObjective || "Auto"}
 
 ==================================================
-OUTPUT FORMAT JSON WAJIB
+OUTPUT FORMAT WAJIB
 ==================================================
 
 {
+  "branding_strategy": {
+    "influencer_type": "",
+    "creator_persona": "",
+    "audience_positioning": "",
+    "trust_building_style": "",
+    "platform_strategy": ""
+  },
+
+  "marketing_funnel": {
+    "funnel_stage": "",
+    "buyer_awareness_level": "",
+    "primary_goal": "",
+    "best_hook_type": "",
+    "conversion_trigger": "",
+    "cta_strategy": ""
+  },
+
+  "marketing_strategy": {
+    "buyer_psychology": "",
+    "sales_angle": "",
+    "hook_strategy": "",
+    "trust_trigger": "",
+    "urgency_trigger": "",
+    "cta_strategy": "",
+    "conversion_goal": ""
+  },
+
   "content_ideas": [
     {
       "title": "",
@@ -274,17 +383,11 @@ OUTPUT FORMAT JSON WAJIB
       "scene_number": 1,
 
       "main_visual": "",
-
       "camera_angle": "",
-
       "facial_expression": "",
-
       "hand_gesture": "",
-
       "background": "",
-
       "lighting": "",
-
       "visual_mood": "",
 
       "nano_banana_image_prompt": "",
@@ -292,9 +395,7 @@ OUTPUT FORMAT JSON WAJIB
       "google_flow_video_prompt": "",
 
       "voice_over": "",
-
       "tone_of_voice": "",
-
       "speaking_style": "",
 
       "timeline_8s": {
@@ -312,27 +413,26 @@ FINAL RULES
 ==================================================
 
 WAJIB:
+- detail
+- spesifik
+- realistis
+- conversion-focused
+- creator-focused
+- sales-focused
+- trust-focused
 - JSON ONLY
-- jangan beri penjelasan
-- jangan markdown
-- jangan code block
-- setiap scene wajib lengkap
-- prompt harus detail
-- prompt harus spesifik
-- prompt harus realistis
-- prompt harus production-ready
 `;
 
-    // =========================================
-    // GEMINI ENDPOINT
-    // =========================================
+    // =====================================================
+    // GEMINI API ENDPOINT
+    // =====================================================
     const endpoint =
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       GEMINI_API_KEY;
 
-    // =========================================
+    // =====================================================
     // GEMINI REQUEST
-    // =========================================
+    // =====================================================
     const geminiResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -352,16 +452,16 @@ WAJIB:
           temperature: 0.8,
           topP: 0.95,
           topK: 40,
-          maxOutputTokens: 4096
+          maxOutputTokens: 8192
         }
       })
     });
 
     const data = await geminiResponse.json();
 
-    // =========================================
-    // GEMINI RESPONSE CHECK
-    // =========================================
+    // =====================================================
+    // GEMINI ERROR CHECK
+    // =====================================================
     if (!geminiResponse.ok) {
       return res.status(500).json({
         success: false,
@@ -370,9 +470,9 @@ WAJIB:
       });
     }
 
-    // =========================================
-    // EXTRACT RAW TEXT
-    // =========================================
+    // =====================================================
+    // EXTRACT RAW OUTPUT
+    // =====================================================
     const rawText =
       data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
@@ -381,9 +481,9 @@ WAJIB:
       .replace(/```/g, "")
       .trim();
 
-    // =========================================
+    // =====================================================
     // SAFE JSON PARSER
-    // =========================================
+    // =====================================================
     let parsed;
 
     try {
@@ -396,16 +496,16 @@ WAJIB:
       });
     }
 
-    // =========================================
+    // =====================================================
     // SUCCESS RESPONSE
-    // =========================================
+    // =====================================================
     return res.status(200).json({
       success: true,
       data: parsed
     });
 
   } catch (error) {
-    console.error("FULL ERROR:", error);
+    console.error("FULL SERVER ERROR:", error);
 
     return res.status(500).json({
       success: false,
