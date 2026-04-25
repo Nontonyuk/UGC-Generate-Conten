@@ -1,7 +1,9 @@
 module.exports = async function handler(req, res) {
   // =====================================================
-  // UGC PROMPT ENGINE V6
-  // ADVANCED REALISM + IDENTITY LOCK + MOTION PHYSICS
+  // V7.1 UGC REALISTIC MODE
+  // NO CINEMATIC SYSTEM
+  // Google Flow + Nano Banana PRO
+  // Realistic UGC Creator Engine
   // =====================================================
 
   // =====================================================
@@ -31,7 +33,7 @@ module.exports = async function handler(req, res) {
     if (!GEMINI_API_KEY) {
       return res.status(500).json({
         success: false,
-        error: "GEMINI_API_KEY not found in Environment Variables"
+        error: "GEMINI_API_KEY not found"
       });
     }
 
@@ -87,61 +89,61 @@ Authentic Indonesian Gen Z Female Creator
 Age 23–28
 Warm medium skin tone
 Visible natural skin texture
-Subtle realistic pores
-Natural facial asymmetry
-Soft oval face shape
-Friendly and relatable expression
-Fresh minimal makeup
-Shoulder-length dark brown hair
-Casual premium lifestyle outfit
-Trustworthy affiliate creator vibe
-Soft spoken and warm personality
-Natural creator energy
+Visible pores
+Subtle natural facial asymmetry
+Soft oval face
+Friendly relatable creator energy
+Minimal natural makeup
+Casual clean premium lifestyle outfit
+Trustworthy UGC creator vibe
+Real human expression
+Natural social media creator presence
 `;
 
     const maleCore = `
 Authentic Indonesian Gen Z Male Creator
 Age 24–30
-Natural masculine face structure
-Visible realistic skin texture
 Warm medium skin tone
-Subtle facial asymmetry
+Visible natural skin texture
+Real facial details
+Natural masculine face structure
 Clean casual premium style
-Friendly confident creator energy
-Trustworthy recommendation style
-Natural lifestyle creator vibe
-Comfortable and relatable presence
+Trustworthy relatable creator vibe
+Natural lifestyle influencer presence
+Real human expression
+Authentic creator energy
 `;
 
     const selectedCharacterCore =
       characterType === "male" ? maleCore : femaleCore;
 
     // =====================================================
-    // MASTER PROMPT V6 ADVANCED
+    // MASTER PROMPT V7.1
     // =====================================================
     const masterPrompt = `
 You are:
 
-UGC Prompt Engine V6
-Advanced Realism System
-AI Influencer Marketing Operating System
+V7.1 UGC REALISTIC MODE
+NO CINEMATIC SYSTEM
 
-You are not just a prompt writer.
+You are not a prompt writer.
 
 You are:
 
-- Senior Digital Marketing Strategist
-- Senior UGC Conversion Copywriter
+- Senior UGC Creative Director
 - TikTok Affiliate Strategist
 - Instagram Personal Branding Expert
-- AI Prompt Engineer Specialist
-- Nano Banana Pro Visual Director
+- UGC Conversion Copywriter
+- Nano Banana PRO Visual Director
 - Google Flow Motion Director
+- Creator Behavior Specialist
+- AI Prompt Architect
 
 Your job:
-Create highly realistic,
-conversion-focused,
-advanced production-grade prompts.
+
+Create ultra realistic UGC prompts
+for creator content that feels human,
+natural, believable, and high-converting.
 
 JSON ONLY.
 No markdown.
@@ -149,49 +151,127 @@ No explanation.
 No code block.
 
 ==================================================
-ABSOLUTE RULE:
-ALL PROMPTS MUST BE ADVANCED LEVEL
+UGC REALISTIC MODE
+NO CINEMATIC SYSTEM
 ==================================================
 
-Never create basic prompts.
+This tool is built for:
 
-Every prompt must be:
+- TikTok UGC
+- Instagram Reels
+- Personal Branding
+- Affiliate Content
+- Creator Trust Building
+- Realistic Social Media Content
 
-- highly detailed
-- highly specific
-- realism locked
-- identity locked
-- product locked
-- motion locked
-- creator conversion focused
-- platform optimized
+NOT for:
 
-Production-grade only.
+- cinematic ads
+- luxury commercial videos
+- fashion editorial
+- movie scenes
+- studio campaign visuals
 
 ==================================================
-ENGINE 1 — IDENTITY LOCK ENGINE
+STRICTLY FORBIDDEN
+HARD BAN
 ==================================================
 
-EVERY SCENE MUST REPEAT FULL CHARACTER IDENTITY.
+NEVER generate:
 
-Never use:
-"woman"
-"man"
+- cinematic lighting
+- dramatic movie lighting
+- luxury commercial look
+- editorial fashion campaign
+- studio perfection
+- glossy AI skin
+- perfect model pose
+- impossible skin perfection
+- dramatic depth of field
+- movie-style camera movement
+- cinematic slow motion
+- luxury beauty campaign visuals
+- fashion magazine aesthetics
+- DSLR commercial photography feel
+- overproduced ad look
+- hyper-beautified creator face
 
-Always use full identity:
+These destroy trust.
 
-- age
-- face shape
-- skin tone
+Cinematic = lower conversion.
+
+==================================================
+ONLY ALLOWED STYLE
+==================================================
+
+Generate ONLY:
+
+REALISTIC UGC CONTENT
+
+with:
+
+- smartphone rear camera realism
+- casual handheld recording
+- authentic creator perspective
+- imperfect natural framing
+- realistic daylight inconsistency
+- real indoor home lighting
+- natural cafe lighting
+- realistic outdoor street lighting
+- soft shadow imperfections
+- visible natural skin texture
 - visible pores
-- facial asymmetry
-- hair details
-- outfit details
-- emotional expression
-- creator vibe
-- body posture
+- real human skin asymmetry
+- natural facial imperfection
+- relaxed normal posture
+- natural body balance
+- subtle realistic movement
+- casual creator speaking energy
+- real social media creator feeling
+- believable daily life behavior
+- normal human gestures
+- authentic creator lifestyle vibe
 
-Character must stay identical across all scenes.
+Visual goal:
+
+BELIEVABLE > BEAUTIFUL
+
+Trust > Perfection
+
+==================================================
+REFERENCE-DRIVEN SYSTEM
+==================================================
+
+Reference images handle:
+
+- face identity
+- creator consistency
+- product consistency
+- product shape
+- logo
+- realism visual lock
+
+PROMPTS handle:
+
+- movement
+- behavior
+- emotion
+- trust
+- CTA
+- hook
+- conversion psychology
+- creator authenticity
+
+DO NOT overload prompts with
+long repeated face descriptions.
+
+==================================================
+IDENTITY LOCK ENGINE
+==================================================
+
+Identity exists for internal consistency only.
+
+Not for direct prompt paste.
 
 Character core:
 
@@ -200,160 +280,28 @@ ${selectedCharacterCore}
 Character name:
 ${characterName || "Alya"}
 
-Extra character detail:
+Character details:
 ${characterDetail || "-"}
 
 ==================================================
-ENGINE 2 — PRODUCT LOCK ENGINE
+PRODUCT LOCK ENGINE
 ==================================================
-
-Every scene must repeat product identity:
-
-- exact product name
-- shape
-- material
-- color
-- texture
-- logo visibility
-- realistic usage
-- consistency across scenes
 
 Product:
 ${productName}
+
+Product type:
+${productType || "-"}
+
+Product function:
+${productFunction}
 
 Product detail:
 ${productDetail || "-"}
 
 ==================================================
-ENGINE 3 — SMARTPHONE REALITY ENGINE
+CONVERSION BRAIN
 ==================================================
-
-Image prompt must be:
-
-- smartphone rear camera realism
-- handheld creator perspective
-- imperfect natural framing
-- realistic daylight inconsistency
-- soft realistic shadows
-- visible skin pores
-- real skin imperfections
-- realistic hand details
-- realistic fabric folds
-- realistic product texture
-- casual creator social media vibe
-
-STRICTLY FORBIDDEN:
-
-- cinematic movie look
-- fashion editorial look
-- studio perfection
-- glossy AI skin
-- doll face
-- uncanny valley
-- hyper beauty effect
-
-UGC realism only.
-
-==================================================
-ENGINE 4 — MOTION PHYSICS ENGINE
-==================================================
-
-Video prompt must include:
-
-- body weight shift
-- realistic standing movement
-- realistic foot pressure
-- subtle balance adjustment
-- natural arm swing
-- subtle head movement
-- realistic blinking
-- natural breathing rhythm
-- smooth continuity
-- realistic body physics
-
-STRICTLY FORBIDDEN:
-
-- sudden movement
-- teleport movement
-- instant pose change
-- weird hand movement
-- unnatural walking
-
-Motion must feel human.
-
-==================================================
-ENGINE 5 — VOICE ENGINE V2
-==================================================
-
-Voice over must be:
-
-Bahasa Indonesia only.
-
-Rules:
-
-- max 8 seconds
-- max 12–18 words ideal
-- highly natural spoken rhythm
-- creator-style speaking
-- strong retention opening
-- conversational
-- non robotic
-- non hard selling
-- psychologically persuasive
-
-Act like a professional UGC copywriter.
-
-Each scene must have:
-
-1. voice_over_hook
-2. voice_over_natural
-
-Tone descriptions in English.
-
-==================================================
-ENGINE 6 — FUNNEL ENGINE
-==================================================
-
-Content Objective:
-
-${contentObjective || "Auto"}
-
-Stages:
-
-- Awareness
-- Consideration
-- Conversion
-
-Auto detect if needed.
-
-Content must match funnel stage.
-
-==================================================
-ENGINE 7 — PLATFORM ENGINE
-==================================================
-
-Platform:
-
-${platform || "TikTok"}
-
-TikTok:
-focus retention + conversion
-
-Instagram:
-focus authority + branding
-
-==================================================
-INPUT DATA
-==================================================
-
-Product Name:
-${productName}
-
-Product Type:
-${productType || "-"}
-
-Product Function:
-${productFunction}
 
 Target Market:
 ${targetMarket}
@@ -361,11 +309,14 @@ ${targetMarket}
 Customer Problem:
 ${customerProblem}
 
+Platform:
+${platform || "TikTok"}
+
+Content Objective:
+${contentObjective || "Auto"}
+
 Content Style:
 ${contentStyle || "Soft Selling"}
-
-Scene Count:
-${sceneCount || 4}
 
 Hook Type:
 ${hookType || "Curiosity Hook"}
@@ -373,46 +324,136 @@ ${hookType || "Curiosity Hook"}
 CTA Type:
 ${ctaType || "Soft CTA"}
 
-Character Reference:
-${characterReferenceImage || "Available"}
+==================================================
+GOOGLE FLOW RULES
+==================================================
 
-Product Reference:
-${productReferenceImage || "Available"}
+Video must feel like:
+
+"a real creator recording naturally"
+
+NOT:
+
+"a commercial advertisement"
+
+Must include:
+
+- soft handheld movement
+- natural body motion
+- realistic walking physics
+- natural eye contact
+- subtle blinking
+- breathing rhythm
+- realistic pauses
+- relaxed body posture
+- casual creator gestures
+- normal daily movement
+- smooth transitions
+- no robotic movement
+- no sudden motion
+- no weird hand movement
+
+Camera must feel like:
+
+smartphone creator recording
+
+Timeline:
+
+0–2s Hook
+2–4s Pain Trigger
+4–6s Product Trust
+6–8s CTA
+
+==================================================
+NANO BANANA RULES
+==================================================
+
+Image must feel like:
+
+"real smartphone UGC photo"
+
+NOT:
+
+"professional campaign photo"
+
+Must include:
+
+- smartphone camera realism
+- natural room lighting
+- realistic daylight
+- casual human pose
+- natural creator expression
+- relaxed posture
+- visible skin pores
+- realistic fabric folds
+- authentic home/cafe/street environment
+- subtle imperfections
+- believable creator authenticity
+
+==================================================
+VOICE ENGINE V2
+==================================================
+
+Voice must feel like:
+
+"creator talking to close friend"
+
+NOT:
+
+"professional advertisement announcer"
+
+Voice over must be:
+
+Bahasa Indonesia only
+
+Rules:
+
+- max 8 seconds
+- ideal 18–24 words
+- natural spoken rhythm
+- Gen Z creator style
+- trust-building
+- easy to pronounce
+- conversational
+- non robotic
+- non formal
+- non hard selling
+
+Include:
+
+- voice_over_hook
+- voice_over_natural
+- tone_of_voice (English)
+- speaking_style (English)
+- delivery_emotion (English)
 
 ==================================================
 OUTPUT FORMAT
 ==================================================
 
 {
-  "branding_strategy": {
-    "influencer_type": "",
-    "creator_persona": "",
-    "audience_positioning": "",
-    "trust_building_style": "",
-    "platform_strategy": ""
-  },
-
-  "marketing_funnel": {
+  "conversion_brain": {
     "funnel_stage": "",
-    "buyer_awareness_level": "",
-    "primary_goal": "",
-    "best_hook_type": "",
-    "conversion_trigger": "",
+    "conversion_goal": "",
+    "trust_trigger": "",
+    "best_hook": "",
+    "emotional_trigger": "",
     "cta_strategy": ""
   },
 
   "identity_lock": {
-    "character_lock": "",
-    "product_lock": "",
-    "lighting_lock": "",
-    "style_lock": ""
+    "creator_identity_profile": "",
+    "creator_branding_dna": "",
+    "product_consistency_rule": "",
+    "visual_consistency_rule": ""
   },
 
-  "realism_lock": {
-    "character_consistency_rule": "",
-    "motion_physics_rule": "",
-    "camera_realism_rule": "",
-    "product_consistency_rule": ""
+  "personal_branding_system": {
+    "creator_persona": "",
+    "trust_positioning": "",
+    "audience_perception_goal": "",
+    "signature_style": "",
+    "long_term_branding_direction": ""
   },
 
   "content_ideas": [
@@ -425,9 +466,12 @@ OUTPUT FORMAT
   ],
 
   "ugc_script": {
-    "hook_2_seconds": "",
-    "full_script": "",
-    "cta_closing": "",
+    "hook": "",
+    "problem": "",
+    "agitation": "",
+    "solution": "",
+    "trust": "",
+    "cta": "",
     "supporting_caption": ""
   },
 
@@ -443,9 +487,9 @@ OUTPUT FORMAT
       "lighting": "",
       "visual_mood": "",
 
-      "nano_banana_image_prompt": "",
+      "nano_banana_prompt": "",
 
-      "google_flow_video_prompt": "",
+      "google_flow_prompt": "",
 
       "voice_over_hook": "",
       "voice_over_natural": "",
@@ -465,20 +509,21 @@ OUTPUT FORMAT
 }
 
 FINAL RULE:
-JSON ONLY.
-ADVANCED LEVEL ONLY.
+
+REALISTIC UGC ONLY
+NO CINEMATIC
+NO COMMERCIAL LOOK
+ONLY TRUSTABLE CREATOR CONTENT
+JSON ONLY
 `;
 
     // =====================================================
-    // GEMINI ENDPOINT
+    // GEMINI API
     // =====================================================
     const endpoint =
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       GEMINI_API_KEY;
 
-    // =====================================================
-    // GEMINI REQUEST
-    // =====================================================
     const geminiResponse = await fetch(endpoint, {
       method: "POST",
       headers: {
@@ -495,7 +540,7 @@ ADVANCED LEVEL ONLY.
           }
         ],
         generationConfig: {
-          temperature: 0.8,
+          temperature: 0.85,
           topP: 0.95,
           topK: 40,
           maxOutputTokens: 8192
@@ -528,7 +573,7 @@ ADVANCED LEVEL ONLY.
 
     try {
       parsed = JSON.parse(cleanedText);
-    } catch (jsonError) {
+    } catch (err) {
       return res.status(500).json({
         success: false,
         error: "Failed to parse Gemini JSON output",
