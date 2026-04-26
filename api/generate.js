@@ -5,80 +5,155 @@ module.exports = async function handler(req, res) {
   // NANO BANANA PRO + GOOGLE FLOW + UGC REALISTIC ONLY
   // NO CINEMATIC • HOOK CTA FIRST • STRUCTURED PROMPT
   // =====================================================
+  // FIX: Image Reference sekarang dikirim sebagai Base64
+  //      dan diproses oleh Gemini Vision API
+  // =====================================================
 
-  // =====================================================
-  // CORS
-  // =====================================================
   res.setHeader("Access-Control-Allow-Origin", "*");
   res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
   res.setHeader("Access-Control-Allow-Headers", "Content-Type");
 
-  if (req.method === "OPTIONS") {
-    return res.status(200).end();
-  }
+  if (req.method === "OPTIONS") return res.status(200).end();
 
   if (req.method !== "POST") {
-    return res.status(405).json({
-      success: false,
-      error: "Method not allowed. Use POST request only."
-    });
+    return res.status(405).json({ success: false, error: "Method not allowed." });
   }
 
   try {
-    // =====================================================
-    // ENV
-    // =====================================================
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
-
     if (!GEMINI_API_KEY) {
-      return res.status(500).json({
-        success: false,
-        error: "GEMINI_API_KEY not found"
-      });
+      return res.status(500).json({ success: false, error: "GEMINI_API_KEY not found" });
     }
 
     // =====================================================
-    // BODY
+    // BODY — TERMASUK BASE64 GAMBAR
     // =====================================================
     const {
-      productName,
-      productType,
-      productFunction,
-      productDetail,
+      productName, productType, productFunction, productDetail,
+      targetMarket, customerProblem,
+      platform, contentObjective, contentStyle,
+      sceneCount, hookType, ctaType,
+      characterType, characterName, characterDetail,
 
-      targetMarket,
-      customerProblem,
-
-      platform,
-      contentObjective,
-      contentStyle,
-
-      sceneCount,
-      hookType,
-      ctaType,
-
-      characterType,
-      characterName,
-      characterDetail,
-
-      characterReferenceImage,
-      productReferenceImage
+      // ✅ FIX: Sekarang menerima Base64, bukan nama file
+      characterReferenceImage,   // Base64 string
+      characterReferenceMime,    // e.g. "image/jpeg"
+      productReferenceImage,     // Base64 string
+      productReferenceMime,      // e.g. "image/png"
+      hasCharacterImage,
+      hasProductImage
     } = req.body || {};
 
-    if (
-      !productName ||
-      !productFunction ||
-      !targetMarket ||
-      !customerProblem
-    ) {
+    if (!productName || !productFunction || !targetMarket || !customerProblem) {
       return res.status(400).json({
         success: false,
-        error:
-          "productName, productFunction, targetMarket, customerProblem wajib diisi"
+        error: "productName, productFunction, targetMarket, customerProblem wajib diisi"
       });
     }
 
     const finalSceneCount = Number(sceneCount) || 4;
+
+    // =====================================================
+    // STEP 1: ANALYZE REFERENCE IMAGES WITH GEMINI VISION
+    // Jika ada gambar, ekstrak detail visual dulu
+    // =====================================================
+    let characterAnalysisResult = "";
+    let productAnalysisResult = "";
+
+    // ANALYZE CHARACTER IMAGE
+    if (hasCharacterImage && characterReferenceImage && characterReferenceMime) {
+      try {
+        const charAnalysisPrompt = `You are a Visual Consistency Analyst for UGC content creation.
+
+Analyze this character/talent reference image and extract ALL visual details needed for consistent AI image generation across multiple scenes.
+
+Extract and structure these details:
+1. PHYSICAL: skin tone (specific shade), face shape, eye shape/color, nose, lips, eyebrows
+2. DISTINGUISHING FEATURES: moles, dimples, unique facial characteristics
+3. STYLE: hair color/length/texture, outfit style, accessories
+4. CREATOR ENERGY: authenticity level, vibe, relatable factor
+5. CONSISTENCY ANCHORS: top 5 visual elements that MUST stay identical in every scene
+6. UGC SUITABILITY: naturalness score, believability assessment
+
+Format as structured text. Be specific and precise. This will be used to generate consistent UGC content.`;
+
+        const charVisionResponse = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  {
+                    inline_data: {
+                      mime_type: characterReferenceMime,
+                      data: characterReferenceImage
+                    }
+                  },
+                  { text: charAnalysisPrompt }
+                ]
+              }],
+              generationConfig: { temperature: 0.2, maxOutputTokens: 800 }
+            })
+          }
+        );
+
+        const charData = await charVisionResponse.json();
+        characterAnalysisResult = charData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      } catch (err) {
+        console.error("Character image analysis failed:", err);
+        characterAnalysisResult = "[Character image analysis failed - using default character core]";
+      }
+    }
+
+    // ANALYZE PRODUCT IMAGE
+    if (hasProductImage && productReferenceImage && productReferenceMime) {
+      try {
+        const prodAnalysisPrompt = `You are a Product Visual Consistency Analyst for UGC content creation.
+
+Analyze this product reference image and extract ALL visual details needed for consistent AI image generation across multiple scenes.
+
+Extract and structure these details:
+1. COLOR PALETTE: exact colors for every part (provide hex codes if possible)
+2. MATERIALS & TEXTURES: describe material of each section precisely
+3. SHAPE & SILHOUETTE: overall form, proportions, dimensions description
+4. BRAND ELEMENTS: logo position, size, color, typography
+5. UNIQUE DESIGN DETAILS: patterns, seams, hardware, special features
+6. CONSISTENCY RULES: top 5 visual elements that MUST never change across scenes
+7. ANGLE NOTES: what's visible from this angle, what angles would show more
+
+Format as structured text. Be specific and precise. This will be used to maintain product consistency in every UGC scene.`;
+
+        const prodVisionResponse = await fetch(
+          `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${GEMINI_API_KEY}`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              contents: [{
+                parts: [
+                  {
+                    inline_data: {
+                      mime_type: productReferenceMime,
+                      data: productReferenceImage
+                    }
+                  },
+                  { text: prodAnalysisPrompt }
+                ]
+              }],
+              generationConfig: { temperature: 0.2, maxOutputTokens: 800 }
+            })
+          }
+        );
+
+        const prodData = await prodVisionResponse.json();
+        productAnalysisResult = prodData?.candidates?.[0]?.content?.parts?.[0]?.text || "";
+      } catch (err) {
+        console.error("Product image analysis failed:", err);
+        productAnalysisResult = "[Product image analysis failed - using product description only]";
+      }
+    }
 
     // =====================================================
     // CHARACTER CORE
@@ -110,11 +185,44 @@ Natural creator energy
 Authentic human expression
 `;
 
-    const selectedCharacterCore =
-      characterType === "male" ? maleCore : femaleCore;
+    const selectedCharacterCore = characterType === "male" ? maleCore : femaleCore;
 
     // =====================================================
-    // MASTER PROMPT V12
+    // BUILD IMAGE REFERENCE CONTEXT BLOCK
+    // Diinjeksikan ke dalam master prompt
+    // =====================================================
+    const imageReferenceContext = `
+==================================================
+VISUAL REFERENCE LOCK SYSTEM
+==================================================
+
+${characterAnalysisResult ? `
+CHARACTER REFERENCE ANALYSIS (FROM UPLOADED IMAGE):
+${characterAnalysisResult}
+
+INSTRUCTION: Use above character analysis as ABSOLUTE identity lock.
+Every scene must maintain 100% visual consistency with this character.
+Do not deviate from any described physical or style attribute.
+` : `
+CHARACTER REFERENCE: No image uploaded.
+Use Character Core below as identity guide.
+`}
+
+${productAnalysisResult ? `
+PRODUCT REFERENCE ANALYSIS (FROM UPLOADED IMAGE):
+${productAnalysisResult}
+
+INSTRUCTION: Use above product analysis as ABSOLUTE product consistency lock.
+Every scene must show product with exact same colors, materials, and design.
+Never alter product appearance across scenes.
+` : `
+PRODUCT REFERENCE: No image uploaded.
+Use product description from input as visual guide.
+`}
+`;
+
+    // =====================================================
+    // MASTER PROMPT V12 — DENGAN IMAGE REFERENCE INJECTION
     // =====================================================
     const masterPrompt = `
 You are:
@@ -312,6 +420,8 @@ ${characterName || "Alya"}
 Character Detail:
 ${characterDetail || "-"}
 
+${imageReferenceContext}
+
 ==================================================
 OUTPUT FORMAT
 ==================================================
@@ -405,27 +515,39 @@ Realistic UGC only
 `;
 
     // =====================================================
-    // GEMINI API
+    // GEMINI API — GENERATE PROMPT
     // =====================================================
     const endpoint =
       "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=" +
       GEMINI_API_KEY;
 
+    // Build parts — jika ada gambar, sertakan juga sebagai visual context
+    const parts = [{ text: masterPrompt }];
+
+    // Opsional: sertakan gambar langsung ke prompt utama untuk konteks visual tambahan
+    if (hasCharacterImage && characterReferenceImage && characterReferenceMime) {
+      parts.unshift({
+        inline_data: {
+          mime_type: characterReferenceMime,
+          data: characterReferenceImage
+        }
+      });
+    }
+
+    if (hasProductImage && productReferenceImage && productReferenceMime) {
+      parts.unshift({
+        inline_data: {
+          mime_type: productReferenceMime,
+          data: productReferenceImage
+        }
+      });
+    }
+
     const geminiResponse = await fetch(endpoint, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        contents: [
-          {
-            parts: [
-              {
-                text: masterPrompt
-              }
-            ]
-          }
-        ],
+        contents: [{ parts }],
         generationConfig: {
           temperature: 0.8,
           topP: 0.95,
@@ -448,16 +570,13 @@ Realistic UGC only
     // =====================================================
     // CLEAN OUTPUT
     // =====================================================
-    const rawText =
-      data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
+    const rawText = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
     const cleanedText = rawText
       .replace(/```json/g, "")
       .replace(/```/g, "")
       .trim();
 
     let parsed;
-
     try {
       parsed = JSON.parse(cleanedText);
     } catch (err) {
@@ -474,12 +593,15 @@ Realistic UGC only
     return res.status(200).json({
       success: true,
       version: "V12 STRUCTURED PROMPT ENGINE",
+      image_reference_used: {
+        character: !!characterAnalysisResult && !characterAnalysisResult.includes("failed"),
+        product: !!productAnalysisResult && !productAnalysisResult.includes("failed")
+      },
       data: parsed
     });
 
   } catch (error) {
     console.error("SERVER ERROR:", error);
-
     return res.status(500).json({
       success: false,
       error: "Internal server error",
