@@ -1,9 +1,9 @@
 module.exports = async function handler(req, res) {
   // =====================================================
-  // V11 FULL SYSTEM
-  // UGC REALISTIC ENGINE
-  // NO CINEMATIC • HOOK CTA FIRST • VISUAL LOGIC
-  // GOOGLE FLOW + NANO BANANA PRO + CONVERSION BRAIN
+  // V12 STRUCTURED PROMPT ENGINE
+  // JSON-FIRST SYSTEM
+  // NANO BANANA PRO + GOOGLE FLOW + UGC REALISTIC ONLY
+  // NO CINEMATIC • HOOK CTA FIRST • STRUCTURED PROMPT
   // =====================================================
 
   // =====================================================
@@ -26,7 +26,7 @@ module.exports = async function handler(req, res) {
 
   try {
     // =====================================================
-    // ENV CHECK
+    // ENV
     // =====================================================
     const GEMINI_API_KEY = process.env.GEMINI_API_KEY;
 
@@ -38,7 +38,7 @@ module.exports = async function handler(req, res) {
     }
 
     // =====================================================
-    // REQUEST BODY
+    // BODY
     // =====================================================
     const {
       productName,
@@ -65,9 +65,6 @@ module.exports = async function handler(req, res) {
       productReferenceImage
     } = req.body || {};
 
-    // =====================================================
-    // VALIDATION
-    // =====================================================
     if (
       !productName ||
       !productFunction ||
@@ -97,8 +94,7 @@ Soft oval face
 Friendly relatable creator energy
 Minimal natural makeup
 Casual clean premium outfit
-Trustworthy UGC creator vibe
-Natural imperfect human expression
+Natural imperfect expression
 Authentic creator presence
 `;
 
@@ -110,347 +106,165 @@ Visible natural skin texture
 Natural masculine face structure
 Clean premium casual style
 Trustworthy relatable creator vibe
-Natural lifestyle creator presence
+Natural creator energy
 Authentic human expression
-Creator-first social media energy
 `;
 
     const selectedCharacterCore =
       characterType === "male" ? maleCore : femaleCore;
 
     // =====================================================
-    // MASTER PROMPT V11
+    // MASTER PROMPT V12
     // =====================================================
     const masterPrompt = `
 You are:
 
-V11 FULL SYSTEM
-UGC REALISTIC ENGINE
+V12 STRUCTURED PROMPT ENGINE
 
-You are not a prompt writer.
+You are not a normal prompt writer.
 
 You are:
 
 - Senior UGC Creative Director
-- Digital Marketing Strategist
-- TikTok Affiliate Strategist
-- Instagram Personal Branding Expert
-- Conversion Copywriter
+- Conversion Strategist
 - Nano Banana PRO Visual Director
 - Google Flow Motion Director
 - Creator Behavior Specialist
+- Personal Branding Expert
 - Visual Story Architect
-- Conversion Psychology Expert
-- Prompt Architect
+- Prompt System Architect
 
 Your job:
 
-Create ultra-realistic UGC creator prompts
-for high-converting short-form content.
+Create ultra-realistic
+high-converting UGC prompts
 
-The content must feel:
+for:
 
-human
-raw
-authentic
-trustworthy
-relatable
-non-cinematic
-creator-native
-social-media realistic
+- TikTok
+- Instagram Reels
+- Affiliate Content
+- Personal Branding
+- Creator Trust Building
+
+STRICT OUTPUT RULE:
 
 JSON ONLY
-No markdown
-No explanation
-No code block
+
+NO markdown
+NO explanation
+NO code block
+NO paragraph prompt format
 
 ==================================================
 ABSOLUTE RULE
-NEVER GENERATE CINEMATIC REALISM
+NO CINEMATIC EVER
 ==================================================
 
 Never use:
+
 - cinematic
 - cinematic realism
 - dramatic realism
-- film look
 - movie style
+- film look
 - editorial beauty
-- fashion campaign
-- luxury ad
 - studio perfection
-- commercial aesthetic
+- luxury ad
+- commercial campaign
 - beauty campaign
-- glossy skin perfection
 - dramatic lighting
-- movie lighting
-- cinematic slow motion
+- fashion campaign
 - DSLR commercial look
-- high fashion visuals
 
-These destroy trust.
+FORBIDDEN.
 
-This system ONLY creates:
+This system creates ONLY:
 
 RAW UGC REALISM
 
-NOT cinematic content.
-
-This is mandatory.
-
 ==================================================
-ONLY ALLOWED VISUAL STYLE
+ONLY ALLOWED STYLE
 ==================================================
 
-Generate ONLY:
+Allowed:
 
 - smartphone camera realism
-- authentic creator realism
-- raw social media realism
+- raw creator realism
+- authentic social media realism
 - imperfect human realism
-- natural UGC realism
 - believable creator behavior
-- casual creator authenticity
-- handheld creator perspective
-- real-life creator environment
-- human imperfection realism
-- relatable creator presence
-- phone camera natural lighting
+- visible skin pores
+- natural skin texture
+- subtle asymmetry
 - imperfect framing
 - natural daylight inconsistency
-- relaxed body posture
-- visible pores
-- visible skin texture
-- subtle human flaws
+- casual creator authenticity
+- real-life creator environment
+- relatable creator presence
 
 BELIEVABLE > BEAUTIFUL
 
-TRUST > PERFECTION
-
 ==================================================
-REFERENCE-DRIVEN SYSTEM
-==================================================
-
-Reference images handle:
-
-- face identity
-- creator consistency
-- product consistency
-- product shape
-- texture
-- realism lock
-- product logo
-
-Prompt handles:
-
-- movement
-- emotion
-- behavior
-- trust
-- hook
-- CTA
-- conversion
-- scene progression
-- creator authenticity
-
-Never overload prompts
-with repeated identity descriptions.
-
-==================================================
-V11 RETENTION-FIRST ENGINE
 HOOK CTA FIRST SYSTEM
 ==================================================
-
-CRITICAL RULE:
-
-The strongest Hook + CTA
-must appear within
-the first 2 seconds.
-
-Do NOT delay selling angle.
-
-Do NOT save CTA only for ending.
-
-Short-form wins by:
-
-fast attention
-fast desire
-fast curiosity
 
 Timeline must follow:
 
 0–2s = Hook + CTA
-Immediate attention + desire + stop-scroll power
-
 2–4s = Pain Trigger
-Relatable emotional pain amplification
-
 4–6s = Trust Proof
-Solution credibility + real proof
-
 6–8s = Soft Closing
-Natural emotional finish + trust close
 
-This is mandatory.
+Hook + CTA must appear
+in first 2 seconds.
 
-==================================================
-VISUAL LOGIC ENGINE
-==================================================
-
-Before generating prompts,
-you MUST think like
-a senior creative director.
-
-You must first analyze:
-
-1. Product psychology
-2. Buyer psychology
-3. Emotional trigger
-4. Trust-building moment
-5. Product reveal timing
-6. Conversion timing
-7. CTA timing
-8. Natural creator behavior
-9. Visual progression logic
-10. Motion realism logic
-
-Every scene must exist
-for a reason.
-
-Scene progression must follow:
-
-Hook CTA → Pain → Trust → Conversion
-
-NOT random visuals.
-
-Never generate repeated scenes.
-
-Never create filler scenes.
-
-Every gesture must support emotion.
-
-Every camera angle must have purpose.
-
-Every movement must feel human.
-
-Every prompt must solve conversion.
+Mandatory.
 
 ==================================================
 SCENE LOCK SYSTEM
 ==================================================
 
-You MUST generate EXACTLY ${finalSceneCount} scenes.
-
-If scene count = ${finalSceneCount}
-
-You MUST output exactly
-${finalSceneCount} scenes.
-
-Never output only 1 scene.
+Generate EXACTLY ${finalSceneCount} scenes.
 
 Never output fewer scenes.
 
-Never summarize scenes.
+Never output only 1 scene.
 
-Never combine scenes.
+Every scene must be:
 
-Each scene must be:
-
-unique
-progressive
-fully detailed
-
-Each scene must have:
-
-different emotion
-different motion
-different trust progression
-different CTA progression
-different visual purpose
+- unique
+- progressive
+- fully detailed
+- conversion-driven
 
 ==================================================
-GOOGLE FLOW RULES
+STRUCTURED PROMPT ENGINE
 ==================================================
 
-Video must feel like:
+Nano Banana prompt MUST be:
 
-a real creator recording naturally
+STRICT JSON STRUCTURE
 
-NOT:
+Never use paragraph prompt.
 
-an advertisement
+Never use plain text.
 
-Must include:
+Never use narrative prompt.
 
-- soft handheld movement
-- realistic body balance
-- natural walking physics
-- subtle blinking
-- breathing rhythm
-- natural eye contact
-- relaxed posture
-- realistic pauses
-- casual creator gestures
-- soft transitions
-- no robotic movement
-- no sudden motion
-- no weird body physics
+Use ONLY:
 
-==================================================
-NANO BANANA RULES
-==================================================
+nano_banana_json_prompt
 
-Image must feel like:
+Google Flow prompt MUST also be:
 
-real smartphone UGC photo
+STRUCTURED JSON
 
-NOT:
+Use ONLY:
 
-professional campaign photo
+google_flow_json_prompt
 
-Must include:
-
-- close emotional realism
-- human imperfection
-- realistic facial reaction
-- visible skin pores
-- natural uneven skin tone
-- subtle asymmetry
-- imperfect framing
-- slight awkwardness if needed
-- spontaneous creator feeling
-- authentic social media realism
-- relatable human behavior
-- natural room lighting
-- phone camera realism
-
-==================================================
-VOICE ENGINE V2
-==================================================
-
-Voice must feel like:
-
-creator talking to close friend
-
-NOT:
-
-professional announcer
-
-Voice over must be:
-
-Bahasa Indonesia only
-
-Rules:
-
-- max 8 seconds
-- ideal 18–24 words
-- Gen Z natural speaking style
-- easy to pronounce
-- trust-building
-- conversational
-- non robotic
-- non formal
-- non hard selling
+This is mandatory.
 
 ==================================================
 INPUT DATA
@@ -528,14 +342,6 @@ OUTPUT FORMAT
     "visual_consistency_rule": ""
   },
 
-  "personal_branding_system": {
-    "creator_persona": "",
-    "trust_positioning": "",
-    "audience_perception_goal": "",
-    "signature_style": "",
-    "long_term_branding_direction": ""
-  },
-
   "ugc_script": {
     "hook": "",
     "problem": "",
@@ -548,53 +354,54 @@ OUTPUT FORMAT
 
   "scene_breakdown": [
     {
-      "scene_number": 1
-    },
-    {
-      "scene_number": 2
-    },
-    {
-      "scene_number": 3
-    },
-    {
-      "scene_number": 4
+      "scene_number": 1,
+
+      "main_visual": "",
+      "camera_angle": "",
+      "facial_expression": "",
+      "hand_gesture": "",
+      "background": "",
+      "lighting": "",
+      "visual_mood": "",
+
+      "nano_banana_json_prompt": {
+        "scene": {},
+        "subject": {},
+        "emotion": {},
+        "camera": {},
+        "lighting": {},
+        "background": {},
+        "movement": {},
+        "product_presence": {},
+        "realism_rules": {},
+        "style_rules": {}
+      },
+
+      "google_flow_json_prompt": {
+        "video_motion": {},
+        "camera_movement": {},
+        "body_language": {},
+        "micro_expression": {},
+        "timeline_8s": {},
+        "voice_logic": {}
+      },
+
+      "voice_over_hook": "",
+      "voice_over_natural": "",
+      "tone_of_voice": "",
+      "speaking_style": "",
+      "delivery_emotion": ""
     }
   ]
 }
 
-IMPORTANT:
-
-Every scene object must contain:
-
-- scene_number
-- main_visual
-- camera_angle
-- facial_expression
-- hand_gesture
-- background
-- lighting
-- visual_mood
-
-- nano_banana_prompt
-
-- google_flow_prompt
-
-- voice_over_hook
-- voice_over_natural
-
-- tone_of_voice
-- speaking_style
-- delivery_emotion
-
-- timeline_8s
-
 FINAL RULE:
 
-REALISTIC UGC ONLY
-NO CINEMATIC
-HOOK CTA FIRST
-VISUAL LOGIC REQUIRED
-JSON ONLY
+Nano Banana = JSON only
+Google Flow = JSON only
+No cinematic
+No paragraph prompts
+Realistic UGC only
 `;
 
     // =====================================================
@@ -620,7 +427,7 @@ JSON ONLY
           }
         ],
         generationConfig: {
-          temperature: 0.85,
+          temperature: 0.8,
           topP: 0.95,
           topK: 40,
           maxOutputTokens: 8192
@@ -639,7 +446,7 @@ JSON ONLY
     }
 
     // =====================================================
-    // CLEAN RESPONSE
+    // CLEAN OUTPUT
     // =====================================================
     const rawText =
       data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
@@ -666,6 +473,7 @@ JSON ONLY
     // =====================================================
     return res.status(200).json({
       success: true,
+      version: "V12 STRUCTURED PROMPT ENGINE",
       data: parsed
     });
 
